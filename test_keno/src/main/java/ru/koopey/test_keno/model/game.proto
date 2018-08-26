@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_outer_classname = "KenoGameProtobuf";
+option java_package = "ru.koopey.test_keno.model";
+
+message Keno {
+    uint64 round = 1;
+    uint32 timer = 2;
+    repeated uint32 balls = 3;
+    repeated History history = 4;
+    repeated Rate rate = 5;
+
+    message History {
+        uint64 id = 1;
+        string ball = 2;
+    }
+
+    message Rate {
+        uint64 round = 1;
+        string ball = 2;
+        uint64 rate = 3;
+        uint64 win = 4;
+    }
+}

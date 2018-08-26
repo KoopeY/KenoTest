@@ -1,0 +1,14 @@
+syntax = "proto3";
+package keno;
+
+message Keno {
+    message Game {
+        uint64 round = 1;
+        uint32 timer = 2;
+        repeated uint32 balls = 3;
+    }
+
+    message History {
+        map<uint32, string> balls = 1;
+    }
+}
