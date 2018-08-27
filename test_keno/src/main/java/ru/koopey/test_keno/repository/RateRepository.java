@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RateRepository extends JpaRepository<Rate, Long> {
     Rate getRateByUuid(String uuid);
-    List<Rate> getRatesByPlayerId(String playerId);
+    List<Rate> getRatesByPlayerIdOrderByRoundDesc(String playerId);
 }

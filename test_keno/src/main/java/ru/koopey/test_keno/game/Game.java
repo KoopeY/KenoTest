@@ -14,9 +14,10 @@ import ru.koopey.test_keno.utils.DateUtils;
 
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 public class Game {
@@ -25,6 +26,7 @@ public class Game {
     private volatile KenoGame currentGame;
     private AtomicBoolean acceptRates = new AtomicBoolean(false);
     private AtomicBoolean isGameReady = new AtomicBoolean(false);
+    private ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
     @Autowired
     private RateRepository rateRepository;
@@ -52,6 +54,7 @@ public class Game {
         KenoGameProtobuf.Keno.Rate.Builder rateBuilder = KenoGameProtobuf.Keno.Rate.newBuilder();
 
         if (isGameReady.get()) {
+            rwLock.readLock().lock();
             if (currentGame.getGame().getBalls() != null && !currentGame.getGame().getBalls().isEmpty()) {
                 currentGame.getGame().getBalls().forEach(gameBuilder::addBalls);
             }
@@ -64,7 +67,7 @@ public class Game {
                 );
             }
 
-            List<ru.koopey.test_keno.entity.Rate> ratesByPlayerId = rateRepository.getRatesByPlayerId(playerId);
+            List<ru.koopey.test_keno.entity.Rate> ratesByPlayerId = rateRepository.getRatesByPlayerIdOrderByRoundDesc(playerId);
             for (ru.koopey.test_keno.entity.Rate rate: ratesByPlayerId) {
                 gameBuilder.addRate(rateBuilder
                         .setBall(rate.getBalls())
@@ -78,12 +81,16 @@ public class Game {
             gameBuilder
                     .setRound(currentGame.getGame().getRound())
                     .setTimer(currentGame.getGame().getTimer());
+
+            rwLock.readLock().unlock();
         }
         return gameBuilder.build();
     }
 
     public void updateGame(KenoGame game) {
+        rwLock.writeLock().lock();
         this.currentGame = game;
+        rwLock.writeLock().unlock();
         if (currentGame.getGame().getBalls().size() > 0) {
             acceptRates.set(false);
             calculateRound();
@@ -94,8 +101,10 @@ public class Game {
     }
 
     private void calculateRound() {
+        rwLock.readLock().lock();
         roundRates.parallelStream().forEach(this::calculatePrize);
         roundRates.clear();
+        rwLock.readLock().unlock();
     }
 
     private void calculatePrize(Rate rate) {

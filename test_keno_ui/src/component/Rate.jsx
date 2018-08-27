@@ -24,6 +24,11 @@ export class Rate extends Component {
             return;
         }
 
+        if (this.props.numbers.length < 1) {
+            alert("Выберите хотя бы один шар!");
+            return;
+        }
+
         let uuid = this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + this.s4() + this.s4();
         this.props.createRate(this.state.rate, this.props.numbers, uuid, this.props.round);
     }
@@ -34,7 +39,7 @@ export class Rate extends Component {
         return(
             <div>
                 <Input type="number" placeholder="Ставка" value={this.state.rate} onChange={this.changeRate}/>
-                <Button color="secondary" onClick={this.makeRate}>
+                <Button disabled={this.props.btnDisabled} color="secondary" onClick={this.makeRate}>
                     Сделать ставку
                 </Button>
             </div>

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import protobuf from 'protobufjs'
 import {clearChoosedBalls, updateRoundInfo} from '../actions/Game'
 
 export const Api = {
@@ -14,6 +13,11 @@ export const Api = {
                     round: round
                 }
             ).then(result => {
+                if (result.data) {
+                    alert("Ставка принята");
+                } else {
+                    alert("Невозможно принять ставку");
+                }
                 dispatch(clearChoosedBalls());
             }).catch(error => {
                 console.log(error);

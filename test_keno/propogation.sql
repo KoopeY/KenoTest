@@ -1,6 +1,6 @@
-CREATE DATABASE `keno` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE keno;
 
-CREATE TABLE `rates` (
+CREATE TABLE keno.rates (
   `id` bigint(20) NOT NULL,
   `balls` varchar(255) DEFAULT NULL,
   `calculated_date` datetime DEFAULT NULL,
@@ -13,5 +13,3 @@ CREATE TABLE `rates` (
   `uuid` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-

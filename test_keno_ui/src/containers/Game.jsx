@@ -60,7 +60,7 @@ class Game extends Component {
 
     generateMenu() {
         let html = [];
-        html.push(<Rate round={this.props.round} createRate={this.props.createRate} numbers={this.props.numbers}/>);
+        html.push(<Rate btnDisabled={this.props.balls.length > 0} round={this.props.round} createRate={this.props.createRate} numbers={this.props.numbers}/>);
         return html;
     }
 
@@ -94,7 +94,12 @@ class Game extends Component {
         let table = [];
         if (this.props.rates) {
             this.props.rates.forEach(h => {
-                table.push(<TableRow><TableCell>Раунд: {h.round}, Выбранные шары: {h.ball}, Ставка: {h.rate}</TableCell></TableRow>)
+                table.push(
+                    <TableRow>
+                        <TableCell>Раунд: {h.round}, Выбранные шары: {h.ball}, Ставка: {h.rate} {h.win ? ", Выигрыш: " +  h.win : ""}
+                        </TableCell>
+                    </TableRow>
+                )
             });
         }
         html.push(this.generateTable("История ставок", table));

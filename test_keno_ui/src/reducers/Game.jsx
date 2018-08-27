@@ -44,13 +44,18 @@ export function game(state, action) {
             if (action.balls) {
                 roundBalls = [...action.balls]
             }
+            let rates = [];
+            if (action.rates) {
+                rates = [...action.rates];
+            }
+
             return {
                 ...state,
                 timer: action.timer,
                 round: action.round,
                 roundBalls: [...roundBalls],
                 history: [...action.history],
-                rates: [...action.rates]
+                rates: [...rates]
             };
         default:
             return state;
