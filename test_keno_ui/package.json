@@ -44,7 +44,7 @@
     "redux-reset": "^0.3.0",
     "redux-thunk": "^2.1.0",
     "style-loader": "^0.16.1",
-    "superagent": "^2.0.0",
+    "superagent": "^5.1.0",
     "url-loader": "^0.5.8",
     "webpack": "^2.3.3"
   },
